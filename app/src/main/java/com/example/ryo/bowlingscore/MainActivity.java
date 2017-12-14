@@ -9,6 +9,7 @@ import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +29,12 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 // クリック時の処理
                 Log.i(TAG,"voice_icon touth");
+                ((ImageView) findViewById(R.id.imageView)).setImageResource(R.drawable.record_voice_icon);
                 startSpeechRecognition();
             }
         });
     }
+
     private SpeechRecognizer mRecognizer;
     private RecognitionListener mRecognitionListener = new RecognitionListener() {
         @Override
@@ -43,9 +47,9 @@ public class MainActivity extends Activity {
             ArrayList<String> values = results
                     .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             String val = values.get(0);
+            ((ImageView) findViewById(R.id.imageView)).setImageResource(R.drawable.voice_icon);
             Log.i(TAG, "認識結果: " + val);
             toastMake(val, 0, -200);
-            startSpeechRecognition();
         }
 
         @Override public void onBeginningOfSpeech() {}
@@ -63,11 +67,9 @@ public class MainActivity extends Activity {
         if (mRecognizer != null) {
             mRecognizer.destroy();
         }
-
         // Create a recognizer.
         mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mRecognizer.setRecognitionListener(mRecognitionListener);
-
         // Start recognition.
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mRecognizer.startListening(intent);
