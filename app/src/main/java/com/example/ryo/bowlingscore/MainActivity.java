@@ -10,25 +10,33 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends Activity {
 
     private static final String TAG = "MainActivity";
+    private int scorePosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG,"!!!!!!!!!!!!!!!!!!onCreate");
-
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "!!!!!!!!!!!!!!!!!!onCreate");
+        TextView dateText = (TextView) this.findViewById(R.id.game_play_date);
+        dateText.setText(getNowDate());
+
+
         findViewById(R.id.imageView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // クリック時の処理
-                Log.i(TAG,"voice_icon touth");
+                Log.d(TAG, "voice_icon touth");
                 ((ImageView) findViewById(R.id.imageView)).setImageResource(R.drawable.record_voice_icon);
                 startSpeechRecognition();
             }
@@ -48,21 +56,41 @@ public class MainActivity extends Activity {
                     .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             String val = values.get(0);
             ((ImageView) findViewById(R.id.imageView)).setImageResource(R.drawable.voice_icon);
-            Log.i(TAG, "認識結果: " + val);
+            Log.d(TAG, "認識結果: " + val);
             toastMake(val, 0, -200);
         }
 
-        @Override public void onBeginningOfSpeech() {}
-        @Override public void onBufferReceived(byte[] arg0) {}
-        @Override public void onEndOfSpeech() {}
-        @Override public void onEvent(int arg0, Bundle arg1) {}
-        @Override public void onPartialResults(Bundle arg0) {}
-        @Override public void onReadyForSpeech(Bundle arg0) {}
-        @Override public void onRmsChanged(float arg0) {}
+        @Override
+        public void onBeginningOfSpeech() {
+        }
+
+        @Override
+        public void onBufferReceived(byte[] arg0) {
+        }
+
+        @Override
+        public void onEndOfSpeech() {
+        }
+
+        @Override
+        public void onEvent(int arg0, Bundle arg1) {
+        }
+
+        @Override
+        public void onPartialResults(Bundle arg0) {
+        }
+
+        @Override
+        public void onReadyForSpeech(Bundle arg0) {
+        }
+
+        @Override
+        public void onRmsChanged(float arg0) {
+        }
     };
 
     private void startSpeechRecognition() {
-        Log.i(TAG,"startSpeechRecognition");
+        Log.d(TAG, "startSpeechRecognition");
         // Need to destroy a recognizer to consecutive recognition?
         if (mRecognizer != null) {
             mRecognizer.destroy();
@@ -74,10 +102,18 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         mRecognizer.startListening(intent);
     }
-    private void toastMake(String message, int x, int y){
+
+    private void toastMake(String message, int x, int y) {
         Toast toast = Toast.makeText(this, message, Toast.LENGTH_LONG);
         // 位置調整
         toast.setGravity(Gravity.BOTTOM, x, 100);
         toast.show();
+    }
+
+    public static String getNowDate() {
+        Date now = new Date(System.currentTimeMillis());
+        DateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日");
+        String nowText = formatter.format(now);
+        return nowText;
     }
 }
